@@ -1,0 +1,227 @@
+{% extends "donate/template.html" %}
+{% load static %}
+{% block content %}
+
+<style type="text/css">
+		/**
+		 * The CSS shown here will not be introduced in the Quickstart guide, but shows
+		 * how you can use CSS to style your Element's container.
+		 */
+		.StripeElement {
+		  box-sizing: border-box;
+
+		  height: 40px;
+
+		  padding: 10px 12px;
+
+		  border: 1px solid transparent;
+		  border-radius: 4px;
+		  background-color: white;
+
+		  box-shadow: 0 1px 3px 0 #e6ebf1;
+		  -webkit-transition: box-shadow 150ms ease;
+		  transition: box-shadow 150ms ease;
+		}
+
+		.StripeElement--focus {
+		  box-shadow: 0 1px 3px 0 #cfd7df;
+		}
+
+		.StripeElement--invalid {
+		  border-color: #fa755a;
+		}
+
+		.StripeElement--webkit-autofill {
+		  background-color: #fefde5 !important;
+		}
+
+	</style>
+
+
+	<script src="https://js.stripe.com/v3/"></script>
+
+
+
+
+
+	<div id="container">
+		<div class="column-6">
+			<div id="left-wrapper">
+				<img id="profile-pic" src="{% static 'images/Evelyn.JPG' %}">
+				<div id="left-wrapper-header">
+					<h3>Buy Us Coffee?</h3>
+					<h5>One Time Donation</h5>
+				</div>
+				<div style="clear:left"></div>
+				<hr>
+				<!-- Add form here -->
+				<form action="{% url 'donate:charge' %}" method="post" id="payment-form">
+					{% csrf_token %}
+					<div class="form-field-12">
+						<label for="amount">Choose Amount:</label>
+						<br>
+						<br>
+						<select required name="amount" id="amount">
+						  <option selected value="5">$5 --- Here's some baby food, on me :)</option>
+						  <option value="10">$10 --- You helped me, so I am going to help you</option>
+						  <option value="25">$25 --- I love your channel!</option>
+						</select>
+					</div>
+
+					<div class="form-field-6">
+						<input required type="text" name="email" placeholder="email...">
+					</div>
+
+					<div class="form-field-6">
+						<input required type="text" name="nickname" placeholder="Nickname...">
+					</div>
+
+				  <div class="form-row">
+				    <label for="card-element">
+				      Credit or debit card
+				    </label>
+				    <div id="card-element">
+				      <!-- A Stripe Element will be inserted here. -->
+				    </div>
+
+				    <!-- Used to display form errors. -->
+				    <div id="card-errors" role="alert"></div>
+				  </div>
+
+				  <div style="clear:left"></div>
+				  <hr>
+
+				 	<input  class="myButton" style="background-color:#e05e5e" type="submit" value="Submit Payment" name="">
+
+				</form>
+
+
+			</div>
+		</div>
+
+		<div class="column-6 ">
+			<div id="right-wrapper">
+			<div class="row">
+				<div class="col-sm-4">
+<!--					<img class="img-responsive coffee-cup" src="{% static 'images/babyformula.png' %}">-->
+				</div>
+				<div class="col-sm-4">
+					<img class="img-responsive babyformula" src="{% static 'images/babyformula.png' %}">
+				</div>
+				<div class="col-sm-4">
+<!--					<img class="img-responsive coffee-cup3" src="{% static 'images/babyformula.png' %}">-->
+				</div>
+			</div>
+			<div class="row">
+					<h3>Please consider supporting our efforts.</h3>
+
+					<p>Games and source codes are free to download, use as you wish :) At no point should you feel obligated to donate.But if you have the means, Thank you!</p>
+					<hr>
+					<a href="{% url 'game_logs:homepage' %}" class="myButton">Back to Games</a>
+			</div>
+
+			<div class="row">
+				<div class="img-container" style="display: flex; margin-top: 50px">
+				{% for image in mybabycodes %}
+				<img class="col-sm-3 img-responsive" src="{{ image.url }}">
+
+				{% endfor %}
+				</div>
+			</div>
+
+				<div class="row">
+					<h3>Machine Coded Anime</h3>
+
+					<p>Our AI powered algorithm has cartoonized your photos as show above. They are incorporated into the game for download below. If you don't like the machine code results, try to have your <a href="{% url 'game_logs:game-detail' game_id.id %}#myCarousel">Babycode done by Human </a> for free! </p>
+
+					<hr>
+
+					<button class="myButton" onclick="location.href='{{ gamefile.url }}'">Download Game</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+	<script>
+		// Create a Stripe client.
+		var stripe = Stripe('pk_live_51JfXWWDgXSumNuL0RSDYecoBN8o2dex1QWSTrxWhlOxnDKjfUffzYl3jkCx765HSDizVdsyiP1KJcoOZwMT2QK9c00ECENGUyb');
+
+		// Create an instance of Elements.
+		var elements = stripe.elements();
+
+		// Custom styling can be passed to options when creating an Element.
+		// (Note that this demo uses a wider set of styles than the guide below.)
+		var style = {
+		  base: {
+		    color: '#32325d',
+		    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+		    fontSmoothing: 'antialiased',
+		    fontSize: '16px',
+		    '::placeholder': {
+		      color: '#aab7c4'
+		    }
+		  },
+		  invalid: {
+		    color: '#fa755a',
+		    iconColor: '#fa755a'
+		  }
+		};
+
+		// Create an instance of the card Element.
+		var card = elements.create('card', {style: style});
+
+		// Add an instance of the card Element into the `card-element` <div>.
+		card.mount('#card-element');
+
+		// Handle real-time validation errors from the card Element.
+		card.addEventListener('change', function(event) {
+		  var displayError = document.getElementById('card-errors');
+		  if (event.error) {
+		    displayError.textContent = event.error.message;
+		  } else {
+		    displayError.textContent = '';
+		  }
+		});
+
+		// Handle form submission.
+		var form = document.getElementById('payment-form');
+		form.addEventListener('submit', function(event) {
+		  event.preventDefault();
+
+		  stripe.createToken(card).then(function(result) {
+		    if (result.error) {
+		      // Inform the user if there was an error.
+		      var errorElement = document.getElementById('card-errors');
+		      errorElement.textContent = result.error.message;
+		    } else {
+		      // Send the token to your server.
+		      stripeTokenHandler(result.token);
+		    }
+		  });
+		});
+
+		// Submit the form with the token ID.
+		function stripeTokenHandler(token) {
+		  // Insert the token ID into the form so it gets submitted to the server
+		  var form = document.getElementById('payment-form');
+		  var hiddenInput = document.createElement('input');
+		  hiddenInput.setAttribute('type', 'hidden');
+		  hiddenInput.setAttribute('name', 'stripeToken');
+		  hiddenInput.setAttribute('value', token.id);
+		  form.appendChild(hiddenInput);
+
+		  // Submit the form
+		  form.submit();
+		}
+	</script>
+
+
+
+
+{% endblock content %}

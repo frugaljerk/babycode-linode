@@ -1,0 +1,54 @@
+{% extends "game_logs/basenew.html" %}
+
+{% block content %}
+
+
+
+<div class="container text-center">
+  <h3>Games</h3><br>
+
+{% for game in game_demos %}
+  {% if forloop.first %}<div class="row" style="min-width: auto">{% endif %}
+
+    <div class="col-sm-4" style="margin: 0">
+        <div class="thumbnail" >
+          <a class="article-title" href="{% url 'game_logs:game-detail' game.id %}"><img class="img-responsive" src="{{ game.display_image.url }}" style="min-width: auto;max-height: 300px;display: flex" alt="Image"></a></p>
+      <h2><a class="article-title" href="{% url 'game_logs:game-detail' game.id %}">{{ game.title }}</a></h2>
+      <small class="text-muted">{{ game.date_added }}</small>
+        </div>
+    </div>
+
+    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+    {% if forloop.last %}</div>{% endif %}
+
+       {% empty %}
+     <li>No game demos have been added yet.</li>
+    {% endfor %}
+
+
+<!--    <div class="col-sm-4"> -->
+<!--      <img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">-->
+<!--      <p>Project 2</p>    -->
+<!--    </div>-->
+<!--    <div class="col-sm-4">-->
+<!--      <div class="well">-->
+<!--       <p>Some text..</p>-->
+<!--      </div>-->
+<!--      <div class="well">-->
+<!--       <p>Some text..</p>-->
+<!--      </div>-->
+<!--    </div>-->
+  </div>
+</div><br>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

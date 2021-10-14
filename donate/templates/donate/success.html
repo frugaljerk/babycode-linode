@@ -1,0 +1,20 @@
+{% extends "donate/template.html" %}
+{% load static %}
+{% block content %}
+
+
+<div id="box">
+		<img id="succes-icon" src="{% static 'images/check.png' %}">
+		<h4>Thank you for your contribution of ${{amount}}!</h4>
+		<p>Your support helps funding a trip for Evelyn and Michael to visit their grandma back home.  You should receive a receipt to the email you provided shortly :)</p>
+		<hr>
+	{% if draw_game_id %}
+		<a class="myButton" href="{% url 'donate:humancode' draw_game_id %}">&#x2190;Back to My Order</a>
+	{% endif %}
+	{% if machine_game_id %}
+		<a class="myButton" href="{% url 'donate:machinecode' machine_game_id %}">&#x2190;Back to My Order</a>
+	{% endif %}
+		<hr>
+		<a class="myButton" href="{% url 'game_logs:homepage' %}">&#x2190;Back to Games</a>
+	</div>
+{% endblock content %}

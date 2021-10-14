@@ -1,0 +1,77 @@
+{% extends "game_logs/basenew.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class=" container-fluid text-center">
+ <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+
+    <h2>My BabyCode Orders</h2>
+
+    {% if user_orders|length < 1 %}
+    <p>No order has been added.</p></div>
+        {% else %}
+
+    <table class=" d-flex table table-striped">
+        <tr>
+            <th scope="col">Order ID</th>
+            <th>Game</th>
+            <th>Status</th>
+            <th>Order Time</th>
+            <th>Download</th>
+        </tr>
+        {% for order in user_orders %}
+        <tr>
+            <th scope="row">{{ order.order_id}}</th>
+            <td>{{ order.game_id }}</td>
+            {% if order.status == False %}
+                <td>In Progress</td>
+            {% else %}
+                <td>Complete</td>
+            {% endif %}
+
+            <td>{{ order.date_added }}</td>
+            {% if order.gamefile %}
+            <td><button class="myButton" onclick="location.href='{{ order.gamefile.url }}'">Download Game</button></td>
+            {% else %}
+            <td>Ready Soon</td>
+            {% endif %}
+        </tr>
+
+{% endfor %}
+    </table>
+
+    {% endif %}
+    </div>
+    <div class="col-sm-3"></div>
+</div>
+
+    <div class="container-fluid">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+      <!-- FORM HERE -->
+        <form method="POST" enctype="multipart/form-data"> <!-- enctype code to save imgs -->
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-b">Profile Info</legend>
+                {{ u_form|crispy }}
+                {{ p_form|crispy }}
+
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-primary loginbtn" type="submit">Update</button>
+            </div>
+        </form>
+            </div>
+        <div class="col-sm-3"></div>
+    </div>
+
+{% endblock content %}

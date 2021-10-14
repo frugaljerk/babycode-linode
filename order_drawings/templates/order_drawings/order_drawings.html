@@ -1,0 +1,346 @@
+{% extends "game_logs/basenew.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+<!-- Description Section -->
+<div class="wrapper-description">
+  <div class="col-sm-8 col-centered">
+    <div class="description-group text-center">
+        <div class="container-fluid">
+            <a class="mr-2" href="{{ gamedemo.link_to_video }}" target="_blank" title="Link to Video" >
+                <img class="img-fluid" style="margin:auto" src="{{ gamedemo.example_image1.url }}" alt="Game Gif">
+            </a>
+        </div>
+        <div class="container-fluid">
+            <h2>{{ gamedemo.title }}</h2>
+            <p class="description">{{ gamedemo.description | safe }}</p>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+
+<!-- ImageDisplay USer upload block -->
+{% if mybabycodes %}
+<div class="container-fluid bg-grey">
+  <div class="row col-sm-8 container-fluid col-centered text-center">
+
+
+
+
+
+        {% if mybabycodes.image1 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image1"  src="{{ mybabycodes.image1.url }}">
+
+        </div>
+        {% endif %}
+        {% if mybabycodes.image2 %}
+        <div class="col-sm-3 img-responsive img-download" >
+            <img id="upload-image2"  src="{{ mybabycodes.image2.url }}" >
+        </div>
+        {% endif %}
+        {% if mybabycodes.image3 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image3" src="{{mybabycodes.image3.url }}" >
+        </div>
+        {% endif %}
+        {% if mybabycodes.image4 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image4" src="{{ mybabycodes.image4.url }}" >
+        </div>
+
+        {% endif %}
+        {% if mybabycodes.image5 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image5"  src="{{ mybabycodes.image5.url }}">
+
+        </div>
+        {% endif %}
+        {% if mybabycodes.image6 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image6" class="article-img" src="{{ mybabycodes.image6.url }}" width="400px">
+        </div>
+        {% endif %}
+        {% if mybabycodes.image7 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image7" class="article-img" src="{{ mybabycodes.image7.url }}" width="400px">
+        </div>
+        {% endif %}
+        {% if mybabycodes.image8 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image8" class="article-img" src="{{ mybabycodes.image8.url }}" width="400px">
+        </div>
+        {% endif %}
+        {% if mybabycodes.image9 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image9" class="article-img" src="{{ mybabycodes.image9.url }}" width="400px">
+        </div>
+        {% endif %}
+        {% if mybabycodes.image10 %}
+        <div class="col-sm-3 img-responsive img-download">
+            <img id="upload-image10" class="article-img" src="{{ mybabycodes.image10.url }}" width="400px">
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div class="row col-sm-8 container-fluid col-centered text-center">
+<!--                  download button if user has previous order -->
+        {% if mybabycodes.gamefile %}
+
+        <!-- Auto width -->
+        <button class="btn btn-outline-primary loginbtn" onclick="location.href='{{ mybabycodes.gamefile.url }}'">Download Game</button>
+
+        {% endif %}
+    </div>
+
+</div>
+{% endif %}
+
+
+
+<!-- Carousel for image upload -->
+<div class="wrapper-form" id="carouselform">
+
+  <div class="col-sm-10 col-centered">
+        <!-- alert box for form validation -->
+      <div id="alert-box" class="alert alert-danger not-visible" role="alert"></div>
+
+    <div class="container-fluid makecode" >
+
+     <h2>Hand Drawn Animates</h2>
+        <h2><a href="{% url 'game_logs:game-detail' gamedemo.id  %}#carouselform">AI BabyCodes</a></h2>
+
+
+            {% csrf_token %}
+
+    <div id="myCarousel" class="carousel slide text-center" data-ride="carousel" data-interval="false" style="min-height: 500px; margin-bottom: 100px; padding-bottom: 200px">
+    <!-- Indicators -->
+
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner content content col-centered" role="listbox" >
+
+        {% for character in gamecharacter %}
+
+
+      <div class="item container-fluid text-centered"  >
+
+          <h1>{{ character.name}}</h1>
+          <p>{{ character.description }}</p>
+
+
+                <div class="col-sm-6 container-fluid" >
+
+
+                    <div class="image-upload img-fluid">
+                            <label for="id_image{{character.id}}" >
+
+                                <img id="characterimgs" src="{{ character.image.url }}"  />
+                             </label>
+
+                            <input type="file"  name="image{{ character.orderimage_index }}" accept="image/*" class="clearablefileinput form-control-file" required="" id="id_image{{character.id}}">
+                        </div>
+
+
+
+                    <p class="not-visible" id="widthimage{{ character.orderimage_index }}">{{ character.width }}</p>
+                    <p class="not-visible" id="heightimage{{ character.orderimage_index }}">{{ character.height }}</p>
+                </div>
+
+                <div class="col-sm-6 container-fluid "  >
+        <!--            <img class="img-characters" src="{{ character.image.url }}" alt="{{ character.name }}">-->
+                    <!-- making image a click button for upload -->
+
+                    <div class="img-responsive img-fluid" style="min-height: {{ character.height }}px; width: {{ character.width }}" id="image{{ character.orderimage_index }}"></div>
+
+
+                </div>
+
+
+
+
+      </div>
+        {% endfor %}
+
+        <!-- Loading GIF implemented -->
+        <div class="item active">
+                <h3>Instruction</h3>
+            <img class="col-sm-4 img-container" id="loadingDiv" src="{% static 'game_logs/images/loadcat.gif' %}" style="min-height: 300px">
+
+            <img class="col-sm-4 img-container" id="loadedDiv" src="{% static 'game_logs/images/loadcatstatic.png' %}" style="min-height: 300px">
+
+
+            <div class="col-sm-8" id="loadingDiv2">
+                <img class="img-responsive" id="loadingDiv2" src="{% static 'game_logs/images/loader.gif' %}" style="min-height: 300px" >
+            </div>
+
+
+
+            <div class="col-sm-8" id="loadedDiv2">
+            <br>
+
+                <p>Click each game character to upload an image. Crop the image to match the character's contour.</p>
+                <p>Press the upload button and wait for AI/OpenCV Engine to cartoonize your images into the game.</p>
+                <p>Download the zipfile and unzip. Double Click "{{ gamedemo.title }}.exe" to play.</p>
+
+
+                <button class="btn btn-outline-primary loginbtn" id="confirm-btn" type="submit">Upload My Baby Images</button>
+            </div>
+
+
+
+        </div>
+
+
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+
+  </div>
+</div>
+
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="wrapper-form">
+
+  <div class="col-sm-10 col-centered">
+
+    <div class="container-fluid makecode">
+
+
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<!--&lt;!&ndash; Image Upload Forms &ndash;&gt;-->
+<!--<div class="wrapper-form">-->
+
+<!--  <div class="col-sm-8 col-centered">-->
+
+<!--    <div class="container-fluid makecode">-->
+
+<!--      <h2>Make New BabyCode</h2>-->
+<!--      <h4><small class="article-metadata" style="text-align: right" ><a href="#" title="Click to learn more">Link for Instruction</a></small></h4>-->
+<!--      <br>-->
+
+<!--            {% csrf_token %}-->
+
+
+<!--        {% for character in gamecharacter %}-->
+
+<!--    <div class="col-sm-6 container-fluid">-->
+
+
+<!--        <div class="container-fluid img-container">-->
+<!--            <h1>{{ character.name}}</h1>-->
+<!--            <p>{{ character.description }}</p>-->
+
+
+<!--            <div class="image-upload img-container">-->
+<!--                    <label for="id_image{{character.id}}" >-->
+
+<!--                        <img id="characterimgs" src="{{ character.image.url }}"  />-->
+<!--                     </label>-->
+
+<!--                    <input type="file"  name="image{{ character.orderimage_index }}" accept="image/*" class="clearablefileinput form-control-file" required="" id="id_image{{character.id}}">-->
+<!--                </div>-->
+
+<!--            <p class="not-visible" id="widthimage{{ character.orderimage_index }}">{{ character.width }}</p>-->
+<!--            <p class="not-visible" id="heightimage{{ character.orderimage_index }}">{{ character.height }}</p>-->
+<!--        </div>-->
+<!--        <div class="img-container">-->
+<!--&lt;!&ndash;            <img class="img-characters" src="{{ character.image.url }}" alt="{{ character.name }}">&ndash;&gt;-->
+<!--            &lt;!&ndash; making image a click button for upload &ndash;&gt;-->
+
+
+<!--                <div class='imagebox img-container' id="image{{ character.orderimage_index }}" >-->
+<!--                    &lt;!&ndash; crop image box place holder &ndash;&gt;-->
+<!--                </div>-->
+
+<!--        </div>-->
+
+
+
+<!--    </div>-->
+
+
+<!--        {% endfor %}-->
+
+<!--    </div>-->
+
+<!--        <button class="btn btn-outline-primary loginbtn" id="confirm-btn" type="submit">confirm</button>-->
+
+<!--    </div>-->
+<!--</div>-->
+
+
+    <!-- carousel-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- pseudoform after the submit button so the Ajax would send form only once -->
+<form action="#" id="image-form">
+    <p id="form-length" class="not-visible">{{ gamecharacter|length }}</p>
+<!--    <input type="file"  name="image{{character.id}}" accept="image/*" class="clearablefileinput form-control-file" required="" id="id_image{{character.id}}">-->
+
+
+
+
+
+
+{% endblock content %}
