@@ -6,11 +6,18 @@ from django.dispatch.dispatcher import receiver
 
 # Create your models here.
 
+class Guest(models.Model):
+    device = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return f"Guest Device ID: {self.device}"
+
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+
     image = models.ImageField(
-        default="profile_pics\default_profile_pic.png", upload_to="profile_pics"
+        default="profile_pics/default_profile_pic.png", upload_to="profile_pics"
     )
 
     def __str__(self):

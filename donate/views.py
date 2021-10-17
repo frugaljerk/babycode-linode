@@ -16,6 +16,7 @@ from users.forms import UserUpdateForm, ProfileUpdateForm
 from babycode import settings
 import stripe
 from django.core.mail import send_mail
+from users.models import Guest
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -31,7 +32,7 @@ def charge(request):
     # charge set out by stripe API
 
     if request.method == "POST":
-        print("Data:", request.POST)
+
 
         amount = int(request.POST["amount"])
 
@@ -94,18 +95,21 @@ def successMsg(request, args):
 
 
 # Donate page wher user can download their game zipfile.
-class MachineCodeDonateView(LoginRequiredMixin, DetailView):
+class MachineCodeDonateView(DetailView):
     model = GameDemo
     template_name = "donate/machinecode.html"
 
     def get_context_data(self, **kwargs):
+
+        guest = Guest.objects.get(device=self.request.COOKIES['device'])
         ctx = super(MachineCodeDonateView, self).get_context_data(**kwargs)
         try:
 
             # Preveiw images
             order = MyBabyCodes.objects.filter(
-                game_id=self.kwargs["pk"], user_id=self.request.user
+                game_id=self.kwargs["pk"], user_id=guest.pk
             ).latest("date_added")
+
             imgList = [
                 x
                 for x in order._meta.fields
@@ -116,6 +120,7 @@ class MachineCodeDonateView(LoginRequiredMixin, DetailView):
             ctx["game_id"] = getattr(order, "game_id")
 
         except:
+
             # TODO: user has no order. Pass for now
             pass
 

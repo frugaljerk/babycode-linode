@@ -19,7 +19,6 @@
             <hr>
             <button class="btn btn-outline-primary loginbtn" onclick="location.href='{{ gamedemo.originalgamefile.url }}'">Download Game</button>
         </div>
-
     </div>
     </div>
 </div>
@@ -35,15 +34,27 @@
 
     <div class="container-fluid makecode" >
 
-
         <!-- Pass routing info to javascript for ajax redirect -->
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <div id="js-url" data-url="{% url 'order_drawings:orderPage' gamedemo.id %}"></div>
         <div id="js-url-machine" data-url="{% url 'donate:machinecode' gamedemo.id %}"></div>
         <div id="js-url-human" data-url="{% url 'donate:humancode' gamedemo.id %}"></div>
-            <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-            <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-        <h2>Customize My Game by:   <input id="toggle-event" type="checkbox" checked data-toggle="toggle" data-on="Algorithm" data-off="Human" data-onstyle="primary" data-offstyle="info">  </h2>
 
+        {% if user.is_authenticated %}
+
+        <h2>Customize My Game by:   <input id="toggle-event" type="checkbox" checked data-toggle="toggle" data-on="Algorithm" data-off="Artist" data-onstyle="primary" data-offstyle="info">  </h2>
+        {% else %}
+
+        <!-- restrict user to machinecode only if not signed in -->
+        <div id="js-url-machine" data-url="{% url 'donate:machinecode' gamedemo.id %}"></div>
+        <h2>Customize My Game by:
+            <span class='test' data-toggle="tooltip" data-placement="top" title="Login Required for Artist Customization">
+            <input class="tooltip" id="toggle-event" type="checkbox" checked data-toggle="toggle tooltip" data-on="Algorithm" data-off="" data-onstyle="primary" data-offstyle="info" title="test" disabled>
+            </span>
+        </h2>
+
+        {% endif %}
 
 
             {% csrf_token %}
@@ -67,7 +78,7 @@
                 <div class="col-sm-6 container-fluid" >
                     <div class="image-upload img-fluid">
                             <label for="id_image{{character.id}}" >
-                                <img id="characterimgs" src="{{ character.image.url }}" />
+                                <img id="characterimgs" src="{{ character.image.url }}" data-toggle="tooltip" data-placement="top" title="Click me to add upload a picture" />
                              </label>
                             <input type="file"  name="image{{ character.orderimage_index }}" accept="image/*" class="clearablefileinput form-control-file" required="" id="id_image{{character.id}}">
                         </div>

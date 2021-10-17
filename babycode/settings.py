@@ -11,9 +11,25 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 
+
+
+
 from pathlib import Path
 
 import os
+
+#Activate in Linode server only:
+#Need to change Key configuration ie: SECRETE_KEY = config['SECRET_KEY']
+# # allow matplotlib to create tmp directory for processing in the server. Not needed locally.
+# import tempfile
+# temp_dir = tempfile.TemporaryDirectory()
+# os.environ['MPLCONFIGDIR'] = temp_dir.name
+#
+# # where to configs are saved on Linode server instaed of os.env
+# with open('/etc/config.json') as config_file:
+#     config = json.load(config_file)
+
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,10 +43,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-DEBUG_VALUE = "True"
+if os.environ.get('DEBUG') == 'TRUE':
+    DEBUG = True
+elif os.environ.get('DEBUG') == 'FALSE':
+    DEBUG = False
 
-ALLOWED_HOSTS = ['babycode.herokuapp.com' , '127.0.0.1', 'www.babycode.ca']
+ALLOWED_HOSTS = ['127.0.0.1', 'www.babycode.ca']
 
 
 # Application definition
@@ -45,6 +63,7 @@ INSTALLED_APPS = [
     "donate",
     "order_drawings.apps.OrderDrawingsConfig",
     "contact",
+
 
     # Default django apps.
     "django.contrib.admin",

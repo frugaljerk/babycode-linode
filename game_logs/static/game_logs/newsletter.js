@@ -3,7 +3,7 @@
 
 
 
-console.log('loaded')
+
 
 const validateEmail = function(email) {
 

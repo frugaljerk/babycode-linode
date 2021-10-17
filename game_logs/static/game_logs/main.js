@@ -3,9 +3,49 @@ const imageForm = document.getElementById('image-form')
 const csrf = document.getElementsByName('csrfmiddlewaretoken')
 const alertBox = document.getElementById('alert-box')
 
+
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 const fd = new FormData(imageForm)
 
-// to valid if user fill all the form fields
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+let device = getCookie('device')
+if (device == null || device == undefined){
+    device = uuidv4()
+}
+document.cookie ='device=' + device + ";domain=;path=/"
+
+
+
+
+
+
+// to validate if user fill all the form fields
 var $length = parseInt($('#form-length').text());
 var blobDone = parseInt($('#form-length').text());
 
@@ -125,8 +165,10 @@ async function delayedAjax() {
                 var action_url = imageForm.action;
                 var redirect_url = $("#js-url-machine").attr("data-url");
             }else{
+
                 var action_url = $("#js-url").attr("data-url");
                 var redirect_url = $("#js-url-human").attr("data-url");
+
             }
             console.log('action url', action_url);
 
@@ -159,8 +201,8 @@ async function delayedAjax() {
             console.log('Ajax Complete')
         },
 
-        function(error){
-            console.log(error)
+        function(){
+            console.log('ERROR')
         }
     );
 
@@ -173,9 +215,28 @@ async function delayedAjax() {
 $('#confirm-btn').click(function() {
     if($length == 0){
         console.log('validated')
+
+        // if (sessionStorage.getItem('status') != null){
+        //                             //redirect to page
+        //
+        //                         console.log('user logged in')
+        //                     }
+        //                 else{
+        //                     console.log('user not logged in')
+        //                     $('#alert-box').html('Log In Required for Human Customization').slideDown();
+        //                     return
+        //                 }
+        //
+
+
+
+
+
+
+
         delayedAjax();
     }else{
-       $('#alert-box').html('Please upload images to all the fields').slideDown();
+       $('#alert-box').html('Please upload images for all characters').slideDown();
     }
 
   // Handler for .ready() called.
@@ -213,24 +274,6 @@ $(document)
   });
 
 
-// $('#myModal').on('shown.bs.modal', function () {
-//   $('#myInput').trigger('focus')
-// })
 
-
-// click character image and shrink the character image
-// $(document).ready(function() {
-//     $('.image-upload').click(function() {
-//         $(this).animate(
-//            {width: '25%', height: 'auto'}, 3000
-//         );
-//
-//
-//
-//     });
-// });
-//
-//
-//
 
 

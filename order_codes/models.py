@@ -6,6 +6,7 @@ import re, os, shutil
 from babycode import settings
 from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
+from users.models import Guest
 
 # Model to store preprocessed images/games
 class MyBabyCodes(models.Model):
@@ -28,7 +29,7 @@ class MyBabyCodes(models.Model):
         return f"order_pics/order_{str(self.order_id)}/{filename}"
 
     """To record users's game orders"""
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(Guest, on_delete=models.CASCADE)
     game_id = models.ForeignKey(GameDemo, on_delete=models.CASCADE)
     order_id = models.CharField(max_length=20, primary_key=True)
     # status = models.BooleanField(default=False)  # True for Order complete, False for Order in progress(use later on for animated games)

@@ -17,6 +17,9 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from contact.forms import ContactForm
 from django.core.mail import send_mail
+from users.models import Guest
+from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser
 
 
 # Helper Functions
@@ -153,41 +156,31 @@ class GameDemoListView(ListView):
     context_object_name = "game_demos"
     ordering = ["-date_added"]
 
-
+#LoginRequiredMixin
 # POST REQUEST process order from machine code and save to MyBabyCode model in order_codes app.
-class GameDetailCreateView(LoginRequiredMixin, CreateView):
+class GameDetailCreateView(CreateView):
 
     template_name = "game_logs/detail.html"
     model = MyBabyCodes
     fields = OrderForm.fields
 
     def get_success_url(self):
-        return reverse("donate:index")
+        pk = self.kwargs["pk"]
+        return reverse("donate:machinecode", kwargs={'pk': pk})
 
-    # return to the same path
-    # def get_success_url(self, **kwargs):
-    #     return self.request.path
 
     def form_valid(self, form):
         form.instance.game_id = GameDemo.objects.get(pk=self.kwargs["pk"])
-        form.instance.user_id = self.request.user
+
+        # use device cookie to create BabyOrders
+        device = self.request.COOKIES['device']
+        guest, created = Guest.objects.get_or_create(device=device)
+        form.instance.user_id = guest
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         ctx = super(GameDetailCreateView, self).get_context_data(**kwargs)
-        try:
-            # Preveiw images
-            ctx["mybabycodes"] = MyBabyCodes.objects.filter(
-                game_id=self.kwargs["pk"], user_id=self.request.user
-            ).latest("date_added")
-            ctx["mybabydrawings"] = MyBabyDrawings.objects.filter(
-                game_id=self.kwargs["pk"], user_id=self.request.user
-            ).latest("date_added")
-
-        except:
-            # TODO: user has no order. Pass for now
-            pass
-
         ctx["gamedemo"] = GameDemo.objects.get(pk=self.kwargs["pk"])
         ctx["gamecharacter"] = GameCharacter.objects.filter(game=self.kwargs["pk"])
 
