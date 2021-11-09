@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class GameDemo(models.Model):
     def game_directory_path(self, filename):
-        return f"game_logs/game_{self.pk}/{filename}"
+        return f"game_logs/game_{self.pk}/{filename}"  # TODO: cant assign pk presave therefore created game_6 folder.
 
     """Main Game Demostration Videos accessible by Admin """
     title = models.CharField(max_length=100)

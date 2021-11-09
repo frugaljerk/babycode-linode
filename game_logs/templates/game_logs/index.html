@@ -14,7 +14,7 @@
         <div class="thumbnail" >
           <a class="article-title" href="{% url 'game_logs:game-detail' game.id %}"><img class="img-responsive" src="{{ game.display_image.url }}" style="min-width: auto;max-height: 300px;display: flex" alt="Image"></a></p>
       <h2><a class="article-title" href="{% url 'game_logs:game-detail' game.id %}">{{ game.title }}</a></h2>
-      <small class="text-muted">{{ game.date_added }}</small>
+      <small class="text-muted">{{ game.date_added |date:"M d Y" }}</small>
         </div>
     </div>
 

@@ -75,32 +75,45 @@ def about(request):
     if request.method == "POST":
         # try if request.Post['email'] or request.POST['contact_email'] exist then act accordingly
         try:
+
             sub = NewsletterUser(
                 email=request.POST["email"],
                 name=request.POST["name"],
                 conf_num=random_digits(),
             )
-            sub.save()
+
+            try:
+                sub.save()
+            except:
+                return render(
+                    request,
+                    "game_logs/about.html",
+                    {"form": SubscriberForm(),
+                     "contact_form": ContactForm(),
+                     'error': "Sorry, this E-mail has been used.",
+                    }
+                )
             # Email confirmtion link to subscriber
-            message = Mail(
-                from_email=settings.EMAIL_HOST_USER,
-                to_emails=sub.email,
-                subject="Newsletter Confirmation",
-                html_content='Thank you {} for signing up for my BabyCode newsletter! \
-                       Please complete the process by \
-                       <a href="{}/?email={}&conf_num={}"> clicking here to \
-                       confirm your registration</a>.'.format(
-                    sub.name,
-                    request.build_absolute_uri("/confirm"),
-                    sub.email,
-                    sub.conf_num,
-                ),
-            )
-
-            sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
-
-
-            response = sg.send(message)
+            # DISABLE EMAIL CONFIRMATION FOR NEWSLETTER FOR NOW
+            # message = Mail(
+            #     from_email=settings.EMAIL_HOST_USER,
+            #     to_emails=sub.email,
+            #     subject="Newsletter Confirmation",
+            #     html_content='Thank you {} for signing up for my BabyCode newsletter! \
+            #            Please complete the process by \
+            #            <a href="{}/?email={}&conf_num={}"> clicking here to \
+            #            confirm your registration</a>.'.format(
+            #         sub.name,
+            #         request.build_absolute_uri("/confirm"),
+            #         sub.email,
+            #         sub.conf_num,
+            #     ),
+            # )
+            #
+            # sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+            #
+            #
+            # response = sg.send(message)
             return render(
                 request,
                 "game_logs/about.html",

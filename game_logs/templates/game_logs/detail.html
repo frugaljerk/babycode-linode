@@ -17,7 +17,11 @@
             <h2>{{ gamedemo.title }}</h2>
             <p class="description">{{ gamedemo.description | safe }}</p>
             <hr>
-            <button class="btn btn-outline-primary loginbtn" onclick="location.href='{{ gamedemo.originalgamefile.url }}'">Download Game</button>
+
+            <p class="description"><button class="btn btn-outline-primary loginbtn" onclick="location.href='{{ gamedemo.originalgamefile.url }}'">Download</button>
+            {{ gamedemo.title }} | <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-windows" viewBox="0 0 16 16">
+                <path d="M6.555 1.375 0 2.237v5.45h6.555V1.375zM0 13.795l6.555.933V8.313H0v5.482zm7.278-5.4.026 6.378L16 16V8.395H7.278zM16 0 7.33 1.244v6.414H16V0z"></path>
+            </svg> Windows 8 or Above.</p>
         </div>
     </div>
     </div>
@@ -78,7 +82,7 @@
                 <div class="col-sm-6 container-fluid" >
                     <div class="image-upload img-fluid">
                             <label for="id_image{{character.id}}" >
-                                <img id="characterimgs" src="{{ character.image.url }}" data-toggle="tooltip" data-placement="top" title="Click me to add upload a picture" />
+                                <img id="characterimgs" src="{{ character.image.url }}" data-toggle="tooltip" data-placement="top" title="Click me to upload a picture" />
                              </label>
                             <input type="file"  name="image{{ character.orderimage_index }}" accept="image/*" class="clearablefileinput form-control-file" required="" id="id_image{{character.id}}">
                         </div>

@@ -38,8 +38,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
 
 
-    <!-- custom css & js-->
+    <!-- custom css & js--><!-- update main.js versioning to force browser reload js -->
     <link rel="stylesheet" type="text/css" href="{% static 'game_logs/mainnew.css' %}">
+
     <script src={% static 'game_logs/main.js' %} defer></script>
 
 </head>
@@ -59,7 +60,7 @@
           {% if email %}
               <div class="alert alert-success alert-dismissible" id="alert-box" style="margin-bottom: 0; border-radius: 0">
                   <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ email }} has been {{ action }}. Please Check Your Email.
+                {{ email }} has been {{ action }}. Thank you for subscribing to our newsletter.
               </div>
           {% endif %}
 
